@@ -1,6 +1,4 @@
 const { Menu, MenuItem, BrowserWindow } = require("electron");
-const i18nBackend = require("i18next-electron-fs-backend");
-const whitelist = require("../localization/whitelist");
 const isMac = process.platform === "darwin";
 
 var MenuBuilder = function(mainWindow, appName) {
@@ -151,11 +149,6 @@ var MenuBuilder = function(mainWindow, appName) {
             role: "togglefullscreen"
           }
         ]
-      },
-      // language menu
-      {
-        label: "Language",
-        submenu: whitelist.buildSubmenu(i18nBackend.changeLanguageRequest)
       },
       // { role: "windowMenu" }
       {

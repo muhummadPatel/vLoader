@@ -8,7 +8,6 @@ const {
 } = require("electron");
 const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
-const i18nextBackend = require("i18next-electron-fs-backend");
 const Store = require("secure-electron-store").default;
 const ContextMenu = require("secure-electron-context-menu").default;
 const path = require("path");
@@ -61,9 +60,6 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js")
     }
   });
-
-  // Sets up main.js bindings for our i18next backend
-  i18nextBackend.mainBindings(ipcMain, win, fs);
 
   // Sets up main.js bindings for our electron store
   const store = new Store({
@@ -162,7 +158,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   } else {
-    i18nextBackend.clearMainBindings(ipcMain);
     ContextMenu.clearMainBindings(ipcMain);
   }
 });
