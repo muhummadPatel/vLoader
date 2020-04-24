@@ -1,9 +1,10 @@
 const { Menu, shell } = require("electron");
+
 const isMac = process.platform === "darwin";
 
-var MenuBuilder = function (mainWindow, appName) {
+const MenuBuilder = (mainWindow, appName) => {
   // https://electronjs.org/docs/api/menu#main-process
-  let defaultTemplate = function () {
+  const defaultTemplate = () => {
     return [
       // { role: "appMenu" }
       ...(isMac
@@ -196,7 +197,7 @@ var MenuBuilder = function (mainWindow, appName) {
   };
 
   return {
-    buildMenu: function () {
+    buildMenu: () => {
       const menu = Menu.buildFromTemplate(defaultTemplate());
       Menu.setApplicationMenu(menu);
 

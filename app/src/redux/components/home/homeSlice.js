@@ -4,15 +4,16 @@ const homeSlice = createSlice({
   name: "home",
   initialState: {
     message:
-      typeof window.api.store.initial()["motd"] !== "undefined"
-        ? window.api.store.initial()["motd"]
-        : "Hello and welcome to the template!"
+      typeof window.api.store.initial().motd !== "undefined"
+        ? window.api.store.initial().motd
+        : "Hello and welcome to the template!",
   },
   reducers: {
     changeMessage(state, action) {
-      state.message = action.payload;
-    }
-  }
+      // state.message = action.payload;
+      return { ...state, ...action.payload };
+    },
+  },
 });
 
 // Export actions

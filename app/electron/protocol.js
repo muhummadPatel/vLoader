@@ -35,7 +35,7 @@ const mimeTypes = {
   ".ico": "image/vnd.microsoft.icon",
   ".png": "image/png",
   ".jpg": "image/jpeg",
-  ".map": "text/plain"
+  ".map": "text/plain",
 };
 
 function charset(mimeType) {
@@ -46,7 +46,7 @@ function charset(mimeType) {
 
 function mime(filename) {
   const type = mimeTypes[path.extname(`${filename || ""}`).toLowerCase()];
-  return type ? type : null;
+  return type || null;
 }
 
 function requestHandler(req, next) {
@@ -60,9 +60,9 @@ function requestHandler(req, next) {
     const mimeType = mime(reqFilename);
     if (!err && mimeType !== null) {
       next({
-        mimeType: mimeType,
+        mimeType,
         charset: charset(mimeType),
-        data: data
+        data,
       });
     } else {
       console.error(err);
@@ -72,5 +72,5 @@ function requestHandler(req, next) {
 
 module.exports = {
   scheme,
-  requestHandler
+  requestHandler,
 };

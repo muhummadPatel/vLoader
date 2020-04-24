@@ -1,8 +1,7 @@
 import { combineReducers } from "redux";
-import undoable from "easy-redux-undo";
 import homeReducer from "../components/home/homeSlice";
 
-const createRootReducer = (history) =>
+const createRootReducer = () =>
   combineReducers({
     home: homeReducer,
   });
