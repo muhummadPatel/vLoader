@@ -4,14 +4,15 @@ const {
   BrowserWindow,
   session,
   ipcMain,
-  Menu
+  Menu,
 } = require("electron");
-const Protocol = require("./protocol");
-const MenuBuilder = require("./menu");
 const Store = require("secure-electron-store").default;
 const ContextMenu = require("secure-electron-context-menu").default;
 const path = require("path");
 const fs = require("fs");
+const Protocol = require("./protocol");
+const MenuBuilder = require("./menu");
+
 const isDev = process.env.NODE_ENV === "development";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
 const selfHost = `http://localhost:${port}`;
@@ -20,6 +21,7 @@ const selfHost = `http://localhost:${port}`;
 // https://github.com/electron-react-boilerplate/electron-react-boilerplate/blob/master/app/main.dev.js
 // NOTE - if you'd like to run w/ these extensions when testing w/o electron, you need browser extensions to be installed (React Developer Tools & Redux DevTools)
 const installExtensions = async () => {
+  // eslint-disable-next-line global-require
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
@@ -57,26 +59,30 @@ async function createWindow() {
       contextIsolation: true,
       enableRemoteModule: false,
       additionalArguments: [`storePath:${app.getPath("userData")}`],
-      preload: path.join(__dirname, "preload.js")
-    }
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   // Sets up main.js bindings for our electron store
   const store = new Store({
-    path: app.getPath("userData")
+    path: app.getPath("userData"),
   });
   store.mainBindings(ipcMain, win, fs);
 
   // Sets up bindings for our custom context menu
   ContextMenu.mainBindings(ipcMain, win, Menu, isDev, {
-    "loudAlertTemplate": [{
-      id: "loudAlert",
-      label: "AN ALERT!"
-    }],
-    "softAlertTemplate": [{
-      id: "softAlert",
-      label: "Soft alert"
-    }]
+    loudAlertTemplate: [
+      {
+        id: "loudAlert",
+        label: "AN ALERT!",
+      },
+    ],
+    softAlertTemplate: [
+      {
+        id: "softAlert",
+        label: "Soft alert",
+      },
+    ],
   });
 
   // Load app
@@ -89,6 +95,7 @@ async function createWindow() {
   // Only do these things when in development
   if (isDev) {
     win.webContents.openDevTools();
+    // eslint-disable-next-line global-require
     require("electron-debug")(); // https://github.com/sindresorhus/electron-debug
   }
 
@@ -106,7 +113,7 @@ async function createWindow() {
   ses
     .fromPartition(partition)
     .setPermissionRequestHandler((webContents, permission, callback) => {
-      let allowedPermissions = []; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+      const allowedPermissions = []; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
       if (allowedPermissions.includes(permission)) {
         callback(true); // Approve permission request
@@ -138,13 +145,15 @@ async function createWindow() {
 // gives our scheme access to load relative files,
 // as well as local storage, cookies, etc.
 // https://electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
-protocol.registerSchemesAsPrivileged([{
-  scheme: Protocol.scheme,
-  privileges: {
-    standard: true,
-    secure: true
-  }
-}]);
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: Protocol.scheme,
+    privileges: {
+      standard: true,
+      secure: true,
+    },
+  },
+]);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -171,7 +180,7 @@ app.on("activate", () => {
 });
 
 // https://electronjs.org/docs/tutorial/security#12-disable-or-limit-navigation
-app.on("web-contents-created", (event, contents) => {
+app.on("web-contents-created", (wccEvent, contents) => {
   contents.on("will-navigate", (event, navigationUrl) => {
     const parsedUrl = new URL(navigationUrl);
     const validOrigins = [selfHost];
@@ -183,7 +192,6 @@ app.on("web-contents-created", (event, contents) => {
       );
 
       event.preventDefault();
-      return;
     }
   });
 
@@ -198,18 +206,19 @@ app.on("web-contents-created", (event, contents) => {
       );
 
       event.preventDefault();
-      return;
     }
   });
 
   // https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
-  contents.on("will-attach-webview", (event, webPreferences, params) => {
+  contents.on("will-attach-webview", (event, webPreferences) => {
     // Strip away preload scripts if unused or verify their location is legitimate
+    /* eslint-disable no-param-reassign */
     delete webPreferences.preload;
     delete webPreferences.preloadURL;
 
     // Disable Node.js integration
     webPreferences.nodeIntegration = false;
+    /* eslint-enable no-param-reassign */
   });
 
   // https://electronjs.org/docs/tutorial/security#13-disable-or-limit-creation-of-new-windows
@@ -220,30 +229,29 @@ app.on("web-contents-created", (event, contents) => {
     );
 
     event.preventDefault();
-    return;
   });
 });
 
 // Filter loading any module via remote;
 // you shouldn't be using remote at all, though
 // https://electronjs.org/docs/tutorial/security#16-filter-the-remote-module
-app.on("remote-require", (event, webContents, moduleName) => {
+app.on("remote-require", (event) => {
   event.preventDefault();
 });
 
 // built-ins are modules such as "app"
-app.on("remote-get-builtin", (event, webContents, moduleName) => {
+app.on("remote-get-builtin", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-global", (event, webContents, globalName) => {
+app.on("remote-get-global", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-current-window", (event, webContents) => {
+app.on("remote-get-current-window", (event) => {
   event.preventDefault();
 });
 
-app.on("remote-get-current-web-contents", (event, webContents) => {
+app.on("remote-get-current-web-contents", (event) => {
   event.preventDefault();
 });

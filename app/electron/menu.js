@@ -1,10 +1,10 @@
-const { Menu, MenuItem, BrowserWindow } = require("electron");
+const { Menu, shell } = require("electron");
+
 const isMac = process.platform === "darwin";
 
-var MenuBuilder = function(mainWindow, appName) {
-
+const MenuBuilder = (mainWindow, appName) => {
   // https://electronjs.org/docs/api/menu#main-process
-  let defaultTemplate = function() {
+  const defaultTemplate = () => {
     return [
       // { role: "appMenu" }
       ...(isMac
@@ -13,34 +13,34 @@ var MenuBuilder = function(mainWindow, appName) {
               label: appName,
               submenu: [
                 {
-                  role: "about"
+                  role: "about",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "services"
+                  role: "services",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "hide"
+                  role: "hide",
                 },
                 {
-                  role: "hideothers"
+                  role: "hideothers",
                 },
                 {
-                  role: "unhide"
+                  role: "unhide",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "quit"
-                }
-              ]
-            }
+                  role: "quit",
+                },
+              ],
+            },
           ]
         : []),
       // { role: "fileMenu" }
@@ -49,138 +49,138 @@ var MenuBuilder = function(mainWindow, appName) {
         submenu: [
           isMac
             ? {
-                role: "close"
+                role: "close",
               }
             : {
-                role: "quit"
-              }
-        ]
+                role: "quit",
+              },
+        ],
       },
       // { role: "editMenu" }
       {
         label: "Edit",
         submenu: [
           {
-            role: "undo"
+            role: "undo",
           },
           {
-            role: "redo"
+            role: "redo",
           },
           {
-            type: "separator"
+            type: "separator",
           },
           {
-            role: "cut"
+            role: "cut",
           },
           {
-            role: "copy"
+            role: "copy",
           },
           {
-            role: "paste"
+            role: "paste",
           },
           ...(isMac
             ? [
                 {
-                  role: "pasteAndMatchStyle"
+                  role: "pasteAndMatchStyle",
                 },
                 {
-                  role: "delete"
+                  role: "delete",
                 },
                 {
-                  role: "selectAll"
+                  role: "selectAll",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
                   label: "Speech",
                   submenu: [
                     {
-                      role: "startspeaking"
+                      role: "startspeaking",
                     },
                     {
-                      role: "stopspeaking"
-                    }
-                  ]
-                }
+                      role: "stopspeaking",
+                    },
+                  ],
+                },
               ]
             : [
                 {
-                  role: "delete"
+                  role: "delete",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "selectAll"
-                }
-              ])
-        ]
+                  role: "selectAll",
+                },
+              ]),
+        ],
       },
       // { role: "viewMenu" }
       {
         label: "View",
         submenu: [
           {
-            role: "reload"
+            role: "reload",
           },
           {
-            role: "forcereload"
+            role: "forcereload",
           },
           {
-            role: "toggledevtools"
+            role: "toggledevtools",
           },
           {
-            type: "separator"
+            type: "separator",
           },
           {
-            role: "resetzoom"
+            role: "resetzoom",
           },
           {
-            role: "zoomin"
+            role: "zoomin",
           },
           {
-            role: "zoomout"
+            role: "zoomout",
           },
           {
-            type: "separator"
+            type: "separator",
           },
           {
-            role: "togglefullscreen"
-          }
-        ]
+            role: "togglefullscreen",
+          },
+        ],
       },
       // { role: "windowMenu" }
       {
         label: "Window",
         submenu: [
           {
-            role: "minimize"
+            role: "minimize",
           },
           {
-            role: "zoom"
+            role: "zoom",
           },
           ...(isMac
             ? [
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "front"
+                  role: "front",
                 },
                 {
-                  type: "separator"
+                  type: "separator",
                 },
                 {
-                  role: "window"
-                }
+                  role: "window",
+                },
               ]
             : [
                 {
-                  role: "close"
-                }
-              ])
-        ]
+                  role: "close",
+                },
+              ]),
+        ],
       },
       {
         role: "help",
@@ -188,22 +188,21 @@ var MenuBuilder = function(mainWindow, appName) {
           {
             label: "Learn More",
             click: async () => {
-              const { shell } = require("electron");
               await shell.openExternal("https://electronjs.org");
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     ];
   };
 
   return {
-    buildMenu: function() {
+    buildMenu: () => {
       const menu = Menu.buildFromTemplate(defaultTemplate());
       Menu.setApplicationMenu(menu);
 
       return menu;
-    }
+    },
   };
 };
 
