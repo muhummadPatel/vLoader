@@ -1,11 +1,9 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
-import Root from "Core/root";
+import Motd from "Pages/motd/motd";
 import store, { history } from "Redux/store/store";
 
 ReactDOM.render(
-  <Suspense fallback="loading">
-    <Root store={store} history={history}></Root>
-  </Suspense>,
+  <Motd store={store} history={history} />,
   document.getElementById("target")
 );
