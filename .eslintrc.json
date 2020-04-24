@@ -18,4 +18,7 @@
   },
   "plugins": ["react"],
   "rules": {},
+  "settings": {
+    "import/core-modules": ["electron"]
+  }
 }
