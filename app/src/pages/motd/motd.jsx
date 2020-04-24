@@ -20,7 +20,9 @@ class Motd extends React.Component {
   onChangeMessage(event) {
     const { value } = event.target;
     this.setState((state) => {
-      return { ...state, ...{ message: value } };
+      console.log("motd");
+      console.log(state);
+      return { message: value };
     });
   }
 
@@ -65,9 +67,9 @@ class Motd extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  home: state.home,
-});
+const mapStateToProps = (state) => {
+  return { home: state.home };
+};
 const mapDispatch = { changeMessage };
 
 Motd.propTypes = {

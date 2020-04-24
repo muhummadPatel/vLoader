@@ -10,8 +10,7 @@ const homeSlice = createSlice({
   },
   reducers: {
     changeMessage(state, action) {
-      // state.message = action.payload;
-      return { ...state, ...action.payload };
+      state.message = action.payload; // eslint-disable-line no-param-reassign
     },
   },
 });
