@@ -1,7 +1,7 @@
 {
-  "name": "secure-electron-template",
-  "version": "4.0.0",
-  "description": "The best way to build Electron apps with security in mind.",
+  "name": "vLoader",
+  "version": "0.1.0",
+  "description": "A cross-platform desktop app to download videos (based on youtube-dl).",
   "private": true,
   "main": "app/electron/main.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "dist-all": "npm run prod-build && electron-builder --mac --linux --windows"
   },
   "build": {
-    "productName": "YourProductName",
-    "appId": "com.yourcompany|electron.yourproductname",
+    "productName": "vLoader",
+    "appId": "io.github.muhummadPatel|electron.vLoader",
     "directories": {
       "buildResources": "resources"
     },
@@ -41,24 +41,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reZach/secure-electron-template.git"
+    "url": "git+https://github.com/muhummadPatel/vLoader.git"
   },
   "keywords": [
     "electron",
-    "security",
-    "template",
-    "react",
-    "redux",
-    "webpack",
-    "i18next",
-    "boilerplate"
+    "youtube-dl",
+    "electron",
+    "video-downloader",
+    "downloader"
   ],
-  "author": "reZach",
+  "author": "Muhummad Patel",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reZach/secure-electron-template/issues"
+    "url": "https://github.com/muhummadPatel/vLoader/issues"
   },
-  "homepage": "https://github.com/reZach/secure-electron-template#readme",
+  "homepage": "https://github.com/muhummadPatel/vLoader#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-transform-react-jsx": "^7.9.4",

@@ -188,7 +188,9 @@ const MenuBuilder = (mainWindow, appName) => {
           {
             label: "Learn More",
             click: async () => {
-              await shell.openExternal("https://electronjs.org");
+              await shell.openExternal(
+                "https://github.com/muhummadPatel/vLoader#readme"
+              );
             },
           },
         ],
