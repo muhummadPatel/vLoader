@@ -1,13 +1,5 @@
-const {
-  app,
-  protocol,
-  BrowserWindow,
-  session,
-  ipcMain,
-  Menu,
-} = require("electron");
+const { app, protocol, BrowserWindow, session, ipcMain } = require("electron");
 const Store = require("secure-electron-store").default;
-const ContextMenu = require("secure-electron-context-menu").default;
 const path = require("path");
 const fs = require("fs");
 const Protocol = require("./protocol");
@@ -68,22 +60,6 @@ async function createWindow() {
     path: app.getPath("userData"),
   });
   store.mainBindings(ipcMain, win, fs);
-
-  // Sets up bindings for our custom context menu
-  ContextMenu.mainBindings(ipcMain, win, Menu, isDev, {
-    loudAlertTemplate: [
-      {
-        id: "loudAlert",
-        label: "AN ALERT!",
-      },
-    ],
-    softAlertTemplate: [
-      {
-        id: "softAlert",
-        label: "Soft alert",
-      },
-    ],
-  });
 
   // Load app
   if (isDev) {
@@ -166,8 +142,6 @@ app.on("window-all-closed", () => {
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
     app.quit();
-  } else {
-    ContextMenu.clearMainBindings(ipcMain);
   }
 });
 

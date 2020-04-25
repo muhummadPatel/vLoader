@@ -1,9 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Motd from "Pages/motd/motd";
-import store, { history } from "Redux/store/store";
+import App from "Components/app/App";
 
-ReactDOM.render(
-  <Motd store={store} history={history} />,
-  document.getElementById("target")
-);
+ReactDOM.render(<App />, document.getElementById("target"));

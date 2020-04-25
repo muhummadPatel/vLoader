@@ -92,21 +92,9 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.3.4",
-    "connected-react-router": "^6.8.0",
-    "easy-redux-undo": "^1.0.0",
-    "history": "^4.10.1",
-    "immutable": "^4.0.0-rc.12",
-    "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-redux": "^7.2.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "redux": "^4.0.5",
-    "seamless-immutable": "^7.1.4",
-    "secure-electron-context-menu": "^1.2.0",
     "secure-electron-store": "1.1.0"
   }
 }
