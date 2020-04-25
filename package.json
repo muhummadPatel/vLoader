@@ -106,7 +106,6 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
     "seamless-immutable": "^7.1.4",
-    "secure-electron-context-menu": "^1.2.0",
     "secure-electron-store": "1.1.0"
   }
 }
