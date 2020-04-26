@@ -1,6 +1,3 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const merge = require("webpack-merge");
 const path = require("path");
 const base = require("./webpack.config");
@@ -19,19 +16,4 @@ module.exports = merge(base, {
       ignored: /node_modules/, // Ignore this path, probably not needed since we define contentBase above
     },
   },
-  plugins: [
-    new MiniCssExtractPlugin(),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "app/src/index.html"),
-      filename: "index.html",
-    }),
-    new CspHtmlWebpackPlugin({
-      "base-uri": ["'self'"],
-      "object-src": ["'none'"],
-      "script-src": ["'self'"],
-      "style-src": ["'self'"],
-      "frame-src": ["'none'"],
-      "worker-src": ["'none'"],
-    }),
-  ],
 });

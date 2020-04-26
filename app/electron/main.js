@@ -1,8 +1,7 @@
-const { app, protocol, BrowserWindow, session, ipcMain } = require("electron");
+const { app, BrowserWindow, session, ipcMain } = require("electron");
 const Store = require("secure-electron-store").default;
 const path = require("path");
 const fs = require("fs");
-const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
 
 const isDev = process.env.NODE_ENV === "development";
@@ -31,11 +30,6 @@ let menuBuilder;
 async function createWindow() {
   if (isDev) {
     await installExtensions();
-  } else {
-    // Needs to happen before creating/loading the browser window;
-    // not necessarily instead of extensions, just using this code block
-    // so I don't have to write another 'if' statement
-    protocol.registerBufferProtocol(Protocol.scheme, Protocol.requestHandler);
   }
 
   // Create the browser window.
@@ -63,9 +57,11 @@ async function createWindow() {
 
   // Load app
   if (isDev) {
+    // make sure the webpack dev server is up
     win.loadURL(selfHost);
   } else {
-    win.loadURL(`${Protocol.scheme}://rse/index-prod.html`);
+    const DIST_PATH = path.join(__dirname, "../../app/dist");
+    win.loadFile(path.join(DIST_PATH, "index.html"));
   }
 
   // Only do these things when in development
@@ -102,34 +98,9 @@ async function createWindow() {
       }
     });
 
-  // https://electronjs.org/docs/tutorial/security#1-only-load-secure-content;
-  // The below code can only run when a scheme and host are defined, I thought
-  // we could use this over _all_ urls
-  // ses.fromPartition(partition).webRequest.onBeforeRequest({urls:["http://localhost./*"]}, (listener) => {
-  //   if (listener.url.indexOf("http://") >= 0) {
-  //     listener.callback({
-  //       cancel: true
-  //     });
-  //   }
-  // });
-
   menuBuilder = MenuBuilder(win, app.name);
   menuBuilder.buildMenu();
 }
-
-// Needs to be called before app is ready;
-// gives our scheme access to load relative files,
-// as well as local storage, cookies, etc.
-// https://electronjs.org/docs/api/protocol#protocolregisterschemesasprivilegedcustomschemes
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: Protocol.scheme,
-    privileges: {
-      standard: true,
-      secure: true,
-    },
-  },
-]);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

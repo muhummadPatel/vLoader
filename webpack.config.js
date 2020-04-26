@@ -1,3 +1,5 @@
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
@@ -43,6 +45,10 @@ module.exports = {
         test: /\.css$/,
         include: [path.resolve(__dirname, "app/src")],
         use: [
+          {
+            loader: "style-loader",
+            options: { attributes: { nonce: "{{__webpack_nonce__}}" } },
+          },
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
@@ -59,4 +65,26 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "app/src/index.html"),
+      filename: "index.html",
+    }),
+    new CspHtmlWebpackPlugin(
+      {
+        "base-uri": ["'self'"],
+        "object-src": ["'none'"],
+        "script-src": ["'self'"],
+        "style-src": ["'self'", "'nonce-some-nonce-123'"], // nonce-{nonceValue} where nonceValue must match the constant defined in index.html
+        "frame-src": ["'none'"],
+        "worker-src": ["'none'"],
+      },
+      {
+        hashEnabled: {
+          "style-src": false,
+        },
+      }
+    ),
+  ],
 };

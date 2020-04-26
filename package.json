@@ -8,7 +8,7 @@
     "postinstall": "electron-builder install-app-deps",
     "lint": "npx eslint --fix --ignore-path .gitignore .",
     "dev-server": "cross-env NODE_ENV=development webpack-dev-server --config ./webpack.development.js",
-    "dev": "npm run lint && concurrently \"npm run dev-server\" \"cross-env NODE_ENV=development electron .\" -k",
+    "dev": "npm run lint && concurrently \"npm run dev-server\" \"npx wait-on --log --delay 2000 --timeout 10000 tcp:localhost:40992 && cross-env NODE_ENV=development electron .\" -k",
     "prod-build": "npm run lint && cross-env NODE_ENV=production npx webpack --mode=production --config ./webpack.production.js",
     "prod": "npm run prod-build && electron .",
     "pack": "electron-builder --dir",
@@ -92,6 +92,8 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.11",
+    "ejs": "^3.1.2",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

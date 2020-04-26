@@ -5,8 +5,7 @@
       {
         "cwd": "babelrc",
         "alias": {
-          "Components": "./app/src/components",
-          "Redux": "./app/src/redux"
+          "Components": "./app/src/components"
         }
       }
     ]

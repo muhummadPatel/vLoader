@@ -1,5 +1,6 @@
 import React from "react";
-import { readConfigRequest, writeConfigRequest } from "secure-electron-store";
+import { writeConfigRequest } from "secure-electron-store";
+import Button from "@material-ui/core/Button";
 import Motd from "Components/motd/Motd";
 
 class App extends React.Component {
@@ -25,7 +26,12 @@ class App extends React.Component {
 
   render() {
     const { motd } = this.state;
-    return <Motd motd={motd} updateMotd={this.updateMotd} />;
+    return (
+      <>
+        <Motd motd={motd} updateMotd={this.updateMotd} />
+        <Button>Test</Button>
+      </>
+    );
   }
 }
 
