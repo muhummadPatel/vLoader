@@ -2,6 +2,7 @@ import React from "react";
 import { writeConfigRequest } from "secure-electron-store";
 // import Motd from "Components/motd/Motd";
 import AddVideo from "Components/addVideo/AddVideo";
+import VideoList from "Components/videoList/VideoList";
 import "./app.scss";
 
 class App extends React.Component {
@@ -28,9 +29,12 @@ class App extends React.Component {
   render() {
     // const { motd } = this.state;
     return (
-      <section className="section">
-        <AddVideo />
-      </section>
+      <div className="container">
+        <div className="box">
+          <AddVideo />
+          <VideoList />
+        </div>
+      </div>
     );
   }
 }

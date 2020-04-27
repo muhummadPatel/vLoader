@@ -7,9 +7,15 @@ class AddVideo extends React.Component {
     this.state = {
       videoInput: "",
     };
+    this.videoInputNode = React.createRef();
 
     this.onChangeVideoInput = this.onChangeVideoInput.bind(this);
     this.onSubmitVideoInput = this.onSubmitVideoInput.bind(this);
+  }
+
+  componentDidMount() {
+    // As soon as this component mounts, pull focus to the search bar
+    this.videoInputNode.current.focus();
   }
 
   onChangeVideoInput(event) {
@@ -24,6 +30,11 @@ class AddVideo extends React.Component {
 
     const { videoInput } = this.state;
     console.log(`Submitted: ${videoInput}`);
+
+    // reset the input text
+    this.setState((state) => {
+      return { ...state, ...{ videoInput: "" } };
+    });
   }
 
   render() {
@@ -32,24 +43,19 @@ class AddVideo extends React.Component {
     return (
       <div className="level">
         <form className="level-item" onSubmit={this.onSubmitVideoInput}>
-          <div className="field has-addons">
-            <div className="control">
-              <input
-                className="input is-medium"
-                placeholder="Video link"
-                value={videoInput}
-                onChange={this.onChangeVideoInput}
-              />
-            </div>
+          <input
+            className="input is-medium"
+            placeholder="Video link"
+            value={videoInput}
+            onChange={this.onChangeVideoInput}
+            ref={this.videoInputNode}
+          />
 
-            <div className="control">
-              <input
-                className="button is-medium is-primary is-outlined"
-                type="submit"
-                value="Download"
-              />
-            </div>
-          </div>
+          <input
+            className="button is-medium is-primary is-outlined"
+            type="submit"
+            value="Download"
+          />
         </form>
       </div>
     );
