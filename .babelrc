@@ -6,7 +6,7 @@
         "cwd": "babelrc",
         "alias": {
           "Components": "./app/src/components",
-          "Redux": "./app/src/redux"
+          "Core": "./app/src/core"
         }
       }
     ]
