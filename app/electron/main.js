@@ -2,8 +2,10 @@ const { app, protocol, BrowserWindow, session, ipcMain } = require("electron");
 const Store = require("secure-electron-store").default;
 const path = require("path");
 const fs = require("fs");
+const youtubedl = require("youtube-dl");
 const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
+const videoUtils = require("./lib/videoUtils");
 
 const isDev = process.env.NODE_ENV === "development";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
@@ -55,11 +57,15 @@ async function createWindow() {
     },
   });
 
+  // TODO: may need to clear out these bindings when the win reference is deleted (closed windows)
   // Sets up main.js bindings for our electron store
   const store = new Store({
     path: app.getPath("userData"),
   });
   store.mainBindings(ipcMain, win, fs);
+
+  // Set up main.js bindings for videoUtils
+  videoUtils.mainBindings(ipcMain, app, fs, youtubedl);
 
   // Load app
   if (isDev) {
