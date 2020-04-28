@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class AddVideo extends React.Component {
   constructor(props) {
@@ -28,8 +29,14 @@ class AddVideo extends React.Component {
   onSubmitVideoInput(event) {
     event.preventDefault();
 
+    const { onAddVideo } = this.props;
     const { videoInput } = this.state;
-    console.log(`Submitted: ${videoInput}`);
+
+    const video = {
+      key: videoInput,
+      title: videoInput,
+    };
+    onAddVideo(video);
 
     // reset the input text and pull back focus
     this.videoInputNode.current.focus();
@@ -62,5 +69,9 @@ class AddVideo extends React.Component {
     );
   }
 }
+
+AddVideo.propTypes = {
+  onAddVideo: PropTypes.func.isRequired,
+};
 
 export default AddVideo;
