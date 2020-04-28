@@ -44,7 +44,7 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    title: `Getting started with secure-electron-template (v.${app.getVersion()})`,
+    title: `vLoader (v.${app.getVersion()})`,
     webPreferences: {
       devTools: isDev,
       nodeIntegration: false,
