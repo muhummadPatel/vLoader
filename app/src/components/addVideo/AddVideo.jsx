@@ -31,7 +31,8 @@ class AddVideo extends React.Component {
     const { videoInput } = this.state;
     console.log(`Submitted: ${videoInput}`);
 
-    // reset the input text
+    // reset the input text and pull back focus
+    this.videoInputNode.current.focus();
     this.setState((state) => {
       return { ...state, ...{ videoInput: "" } };
     });
