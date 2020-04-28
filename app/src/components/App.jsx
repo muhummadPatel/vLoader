@@ -30,7 +30,7 @@ class App extends React.Component {
 
     return (
       <div className="container">
-        <div className="box">
+        <div className="box has-background-white-bis">
           <AddVideo onAddVideo={this.onAddVideo} />
           <VideoList videos={videos} />
         </div>
