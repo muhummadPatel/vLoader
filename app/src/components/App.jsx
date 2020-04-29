@@ -7,12 +7,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      videos: [
-        {
-          key: "myvideo.url",
-          title: "myvideo",
-        },
-      ],
+      videos: [],
     };
 
     this.onAddVideo = this.onAddVideo.bind(this);

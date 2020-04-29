@@ -34,8 +34,7 @@ class AddVideo extends React.Component {
     if (videoInput) {
       const { onAddVideo } = this.props;
       const video = {
-        key: videoInput,
-        title: videoInput,
+        url: videoInput,
       };
       onAddVideo(video);
     }
