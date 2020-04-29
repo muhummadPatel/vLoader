@@ -41,7 +41,7 @@ class VideoUtils {
     });
   }
 
-  getThumbnails(videoUrl) {
+  getThumbnail(videoUrl) {
     return new Promise((resolve, reject) => {
       this.youtubedl.getThumbs(
         videoUrl,
@@ -49,10 +49,11 @@ class VideoUtils {
         (err, files) => {
           if (err) reject(err);
 
-          const filePaths = files.map((file) => {
-            return `file://${path.join(this.thumbnailDir, file)}`;
-          });
-          resolve(filePaths);
+          const thumbnails = files.map((file) => {
+            return `${path.join(this.thumbnailDir, file)}`;
+          })[0];
+
+          resolve(thumbnails);
         }
       );
     });
@@ -91,13 +92,13 @@ class VideoUtils {
 
 const Requests = {
   getFormats: "Request.getFormats",
-  getThumbnails: "Request.getThumbnails",
+  getThumbnail: "Request.getThumbnail",
   download: "Request.download",
 };
 
 const Responses = {
   getFormats: "Response.getFormats",
-  getThumbnails: "Response.getThumbnails",
+  getThumbnail: "Response.getThumbnail",
   download: {
     progress: "Response.download.progress",
     done: "Response.download.done",
@@ -113,10 +114,10 @@ function preloadBindings(ipcRenderer) {
         next(formats);
       });
     },
-    getThumbnails: (videoUrl, next) => {
-      ipcRenderer.send(Requests.getThumbnails, videoUrl);
+    getThumbnail: (videoUrl, next) => {
+      ipcRenderer.send(Requests.getThumbnail, videoUrl);
 
-      ipcRenderer.on(Responses.getThumbnails, (event, thumbnails) =>
+      ipcRenderer.on(Responses.getThumbnail, (event, thumbnails) =>
         next(thumbnails)
       );
     },
@@ -134,20 +135,26 @@ function preloadBindings(ipcRenderer) {
   };
 }
 
-function mainBindings(ipcMain, app, fs, youtubedl) {
+function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
   const videoUtils = new VideoUtils(app, fs, youtubedl);
 
   // getFormats bindings
   ipcMain.on(Requests.getFormats, (event, videoUrl) => {
-    videoUtils.getFormats(videoUrl).then((formats) => {
-      event.reply(Responses.getFormats, formats);
-    });
+    videoUtils
+      .getFormats(videoUrl)
+      .then((formats) => {
+        event.reply(Responses.getFormats, formats);
+      })
+      .catch((err) => console.log(err));
   });
 
   // getThumbnails bindings
-  ipcMain.on(Requests.getThumbnails, (event, videoUrl) => {
-    videoUtils.getThumbnails(videoUrl).then((thumbnails) => {
-      event.reply(Responses.getThumbnails, thumbnails);
+  ipcMain.on(Requests.getThumbnail, (event, videoUrl) => {
+    videoUtils.getThumbnail(videoUrl).then((thumbnail) => {
+      image2base64(thumbnail).then((base64String) => {
+        const imgStr = `data:image/png;base64, ${base64String}`;
+        event.reply(Responses.getThumbnail, imgStr);
+      });
     });
   });
 

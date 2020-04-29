@@ -3,6 +3,7 @@ const Store = require("secure-electron-store").default;
 const path = require("path");
 const fs = require("fs");
 const youtubedl = require("youtube-dl");
+const image2base64 = require("image-to-base64");
 const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
 const videoUtils = require("./lib/videoUtils");
@@ -65,7 +66,7 @@ async function createWindow() {
   store.mainBindings(ipcMain, win, fs);
 
   // Set up main.js bindings for videoUtils
-  videoUtils.mainBindings(ipcMain, app, fs, youtubedl);
+  videoUtils.mainBindings(ipcMain, app, fs, image2base64, youtubedl);
 
   // Load app
   if (isDev) {
