@@ -32,24 +32,36 @@ class VideoListItem extends React.Component {
     const { loaded, thumbnail } = this.state;
     const { video } = this.props;
 
-    let listItemContents;
-    if (loaded) {
-      listItemContents = (
-        <div className="level">
-          <div className="level-left">
-            <figure className="level-item image is-thumbnail is-128x128">
-              <img src={thumbnail} alt="video-thumbnail" />
-            </figure>
-            <p className="level-item">{video.url}</p>
-          </div>
+    return (
+      <div className="columns is-vcentered">
+        <div className="column is-narrow">
+          <figure
+            className={`image is-thumbnail is-128x128
+              ${loaded ? "" : "is-loading"}`}
+          >
+            <img src={thumbnail} alt="" />
+          </figure>
         </div>
-      );
-    } else {
-      listItemContents = (
-        <figure className="image is-thumbnail is-128x128 is-loading" />
-      );
-    }
-    return <>{listItemContents}</>;
+
+        <div className="column">
+          <p className="is-size-6">{video.url}</p>
+          <progress
+            className="progress is-large is-primary"
+            max="100"
+            // TODO: fix this to actually display progress once we start the download
+            value={loaded ? 50 : null}
+          />
+        </div>
+
+        <div className="column is-narrow is-pulled-right">
+          <button type="button" className="button is-medium is-outlined">
+            <span className="icon is-small">
+              <i className="mdi mdi-24px mdi-close" />
+            </span>
+          </button>
+        </div>
+      </div>
+    );
   }
 }
 
