@@ -2,6 +2,8 @@ $mdi-font-path: "~@mdi/font/fonts";
 @import "~@mdi/font/scss/materialdesignicons";
 
 @import "~bulma/bulma";
+@import "~bulma/sass/utilities/mixins";
+@import "~bulma/sass/utilities/initial-variables";
 
 html {
   height: 100%;
@@ -14,4 +16,31 @@ body {
 
 #target {
   height: -webkit-fill-available;
+}
+
+.image {
+  &.is-thumbnail {
+    // displays thumbnails in their own little letterboxed container
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: $black;
+    border-radius: $radius;
+
+    &.is-loading {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.5;
+
+      &:after {
+        @include loader;
+        position: absolute;
+        top: calc(50% - 2.5em);
+        left: calc(50% - 2.5em);
+        width: 5em;
+        height: 5em;
+        border-width: 0.25em;
+      }
+    }
+  }
 }

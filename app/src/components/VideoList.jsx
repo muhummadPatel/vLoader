@@ -15,16 +15,14 @@ function VideoList(props) {
   } else {
     contents = (
       <div className="list-item">
-        <div className="level">
-          <p className="is-size-56 has-text-centered">
-            Get started by pasting a video link in the box above
-          </p>
-          <p className="is-size-4 has-text-centered">
-            <span role="img" aria-label="hug">
-              🤗
-            </span>
-          </p>
-        </div>
+        <p className="is-size-6 has-text-centered">
+          Get started by pasting a video link in the box above
+        </p>
+        <p className="is-size-4 has-text-centered">
+          <span role="img" aria-label="hug">
+            🤗
+          </span>
+        </p>
       </div>
     );
   }

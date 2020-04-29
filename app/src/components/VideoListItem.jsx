@@ -35,12 +35,19 @@ class VideoListItem extends React.Component {
     let listItemContents;
     if (loaded) {
       listItemContents = (
-        <figure className="image is-128x128">
-          <img src={thumbnail} alt="video-thumbnail" />
-        </figure>
+        <div className="level">
+          <div className="level-left">
+            <figure className="level-item image is-thumbnail is-128x128">
+              <img src={thumbnail} alt="video-thumbnail" />
+            </figure>
+            <p className="level-item">{video.url}</p>
+          </div>
+        </div>
       );
     } else {
-      listItemContents = video.url;
+      listItemContents = (
+        <figure className="image is-thumbnail is-128x128 is-loading" />
+      );
     }
     return <>{listItemContents}</>;
   }
