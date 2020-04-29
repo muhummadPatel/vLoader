@@ -61,11 +61,16 @@ class AddVideo extends React.Component {
             ref={this.videoInputNode}
           />
 
-          <input
-            className="button is-medium is-primary is-outlined"
+          <button
+            className="button is-medium is-primary"
             type="submit"
             value="Download"
-          />
+            disabled={!videoInput} // disable if videoInput is empty
+          >
+            <span className="icon is-medium">
+              <i className="mdi mdi-24px mdi-download" />
+            </span>
+          </button>
         </form>
       </div>
     );
