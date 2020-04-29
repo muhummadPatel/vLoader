@@ -22,21 +22,23 @@ class AddVideo extends React.Component {
   onChangeVideoInput(event) {
     const { value } = event.target;
     this.setState((state) => {
-      return { ...state, ...{ videoInput: value } };
+      return { ...state, ...{ videoInput: value.trim() } };
     });
   }
 
   onSubmitVideoInput(event) {
     event.preventDefault();
 
-    const { onAddVideo } = this.props;
+    // invoke onAddVideo for any non-empty input
     const { videoInput } = this.state;
-
-    const video = {
-      key: videoInput,
-      title: videoInput,
-    };
-    onAddVideo(video);
+    if (videoInput) {
+      const { onAddVideo } = this.props;
+      const video = {
+        key: videoInput,
+        title: videoInput,
+      };
+      onAddVideo(video);
+    }
 
     // reset the input text and pull back focus
     this.videoInputNode.current.focus();
