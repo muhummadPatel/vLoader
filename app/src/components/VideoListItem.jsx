@@ -22,17 +22,21 @@ class VideoListItem extends React.Component {
   componentDidMount() {
     const { video } = this.props;
 
-    window.api.videoUtils.getThumbnail(video.url, (file) => {
-      this.setState((state) => {
-        return {
-          ...state,
-          ...{
-            loaded: true,
-            thumbnail: file,
-          },
-        };
-      }, this.startDownload());
-    });
+    try {
+      window.api.videoUtils.getThumbnail(video.url, (file) => {
+        this.setState((state) => {
+          return {
+            ...state,
+            ...{
+              loaded: true,
+              thumbnail: file,
+            },
+          };
+        }, this.startDownload());
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   onRemoveVideoClicked() {
@@ -43,31 +47,35 @@ class VideoListItem extends React.Component {
   }
 
   startDownload() {
-    const { video } = this.props;
-    const format = "best"; // TODO: get this from the user
+    try {
+      const { video } = this.props;
+      const format = "best"; // TODO: get this from the user
 
-    const onStart = ({ title, size }) => {
-      this.setState((state) => {
-        return { ...state, ...{ title, size } };
-      });
-    };
-    const onProgress = ({ progress }) => {
-      this.setState((state) => {
-        return { ...state, ...{ progress } };
-      });
-    };
-    const onDone = () => {
-      this.setState((state) => {
-        return { ...state, ...{ done: true } };
-      });
-    };
-    window.api.videoUtils.download(
-      video.url,
-      format,
-      onStart,
-      onProgress,
-      onDone
-    );
+      const onStart = ({ title, size }) => {
+        this.setState((state) => {
+          return { ...state, ...{ title, size } };
+        });
+      };
+      const onProgress = ({ progress }) => {
+        this.setState((state) => {
+          return { ...state, ...{ progress } };
+        });
+      };
+      const onDone = () => {
+        this.setState((state) => {
+          return { ...state, ...{ done: true } };
+        });
+      };
+      window.api.videoUtils.download(
+        video.url,
+        format,
+        onStart,
+        onProgress,
+        onDone
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {

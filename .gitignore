@@ -96,3 +96,6 @@ dist/
 
 # VSCode specific
 .vscode/
+
+# local bin dir
+app/electron/bin

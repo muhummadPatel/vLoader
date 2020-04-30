@@ -47,7 +47,10 @@ class VideoUtils {
         videoUrl,
         { cwd: this.thumbnailDir },
         (err, files) => {
-          if (err) reject(err);
+          if (err || !files || files.length === 0) {
+            reject(Error(`Unable to load Thumbnails\n${err}`));
+            return;
+          }
 
           const thumbnails = files.map((file) => {
             return `${path.join(this.thumbnailDir, file)}`;
@@ -156,7 +159,7 @@ function preloadBindings(ipcRenderer) {
   };
 }
 
-function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
+function mainBindings(ipcMain, dialog, app, fs, image2base64, youtubedl) {
   const videoUtils = new VideoUtils(app, fs, youtubedl);
 
   // getFormats bindings
@@ -171,12 +174,17 @@ function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
 
   // getThumbnails bindings
   ipcMain.on(Requests.getThumbnail, (event, videoUrl) => {
-    videoUtils.getThumbnail(videoUrl).then((thumbnail) => {
-      image2base64(thumbnail).then((base64String) => {
-        const imgStr = `data:image/png;base64, ${base64String}`;
-        event.reply(Responses.getThumbnail(videoUrl), imgStr);
-      });
-    });
+    videoUtils
+      .getThumbnail(videoUrl)
+      .then((thumbnail) => {
+        image2base64(thumbnail).then((base64String) => {
+          const imgStr = `data:image/png;base64, ${base64String}`;
+          event.reply(Responses.getThumbnail(videoUrl), imgStr);
+        });
+      })
+      .catch((err) =>
+        dialog.showErrorBox("Oops! Something went wrong!", `${err}`)
+      );
   });
 
   // download bindings generators for a given event
@@ -192,13 +200,17 @@ function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
     return (videoUrl) => event.reply(Responses.download.done(videoUrl));
   };
   ipcMain.on(Requests.download, (event, videoUrl, format) => {
-    videoUtils.download(
-      videoUrl,
-      format,
-      onStartFor(event),
-      onProgressFor(event),
-      onDoneFor(event)
-    );
+    try {
+      videoUtils.download(
+        videoUrl,
+        format,
+        onStartFor(event),
+        onProgressFor(event),
+        onDoneFor(event)
+      );
+    } catch (err) {
+      dialog.showErrorBox("Oops! Something went wrong!", `${err}`);
+    }
   });
 }
 

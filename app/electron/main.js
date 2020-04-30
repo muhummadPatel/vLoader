@@ -1,8 +1,16 @@
-const { app, protocol, BrowserWindow, session, ipcMain } = require("electron");
+const {
+  app,
+  dialog,
+  protocol,
+  BrowserWindow,
+  session,
+  ipcMain,
+} = require("electron");
 const Store = require("secure-electron-store").default;
 const path = require("path");
 const fs = require("fs");
 const youtubedl = require("youtube-dl");
+const youtubedlDownloader = require("youtube-dl/lib/downloader");
 const image2base64 = require("image-to-base64");
 const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
@@ -11,6 +19,26 @@ const videoUtils = require("./videoUtils");
 const isDev = process.env.NODE_ENV === "development";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
 const selfHost = `http://localhost:${port}`;
+
+// TODO: consider doing this better https://stackoverflow.com/questions/33152533/bundling-precompiled-binary-into-electron-app
+const resourcesPath = app.isPackaged
+  ? path.dirname(app.getAppPath())
+  : __dirname;
+const binDir = path.join(resourcesPath, "bin");
+const youtubedlBin = path.join(binDir, "youtube-dl");
+
+const downloadYoutubedlBinaries = () => {
+  return new Promise((resolve, reject) => {
+    youtubedlDownloader(binDir, function error(err, done) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(done);
+    });
+  });
+};
 
 // Installs extensions useful for development;
 // https://github.com/electron-react-boilerplate/electron-react-boilerplate/blob/master/app/main.dev.js
@@ -32,6 +60,20 @@ let win;
 let menuBuilder;
 
 async function createWindow() {
+  if (!fs.existsSync(youtubedlBin)) {
+    dialog.showErrorBox(
+      "Installing dependencies",
+      `This may take a few minutes. Please press ok and wait a bit... 🌈`
+    );
+
+    await downloadYoutubedlBinaries().catch((err) => {
+      dialog.showErrorBox(
+        "Unable to install binaries",
+        `Encountered an error installing the youtube-dl binary. Please contact the developer:\n${err}`
+      );
+    });
+  }
+
   if (isDev) {
     await installExtensions();
   } else {
@@ -66,7 +108,8 @@ async function createWindow() {
   store.mainBindings(ipcMain, win, fs);
 
   // Set up main.js bindings for videoUtils
-  videoUtils.mainBindings(ipcMain, app, fs, image2base64, youtubedl);
+  youtubedl.setYtdlBinary(youtubedlBin);
+  videoUtils.mainBindings(ipcMain, dialog, app, fs, image2base64, youtubedl);
 
   // Load app
   if (isDev) {
