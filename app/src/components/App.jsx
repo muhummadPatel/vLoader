@@ -17,7 +17,14 @@ class App extends React.Component {
   onAddVideo(video) {
     this.setState((state) => {
       const { videos } = state;
-      return { ...state, ...{ videos: videos.concat(video) } };
+
+      const isExistingVideo =
+        videos.filter((existingVideo) => existingVideo.url === video.url)
+          .length > 0;
+      if (!isExistingVideo) {
+        return { ...state, ...{ videos: videos.concat(video) } };
+      }
+      return state;
     });
   }
 
