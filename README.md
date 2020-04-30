@@ -1,68 +1,28 @@
-# secure-electron-template
-A current electron app template with the most popular frameworks, designed and built with security in mind. (If you are curious about what makes an electron app secure, please check out [this page](https://github.com/reZach/secure-electron-template/blob/master/docs/secureapps.md))
+# vLoader
 
-![Banner](https://github.com/reZach/secure-electron-template/blob/master/docs/imgs/banner-image.png "Banner")
+An extremely simple, no frills, video downloader. This app should run on any platform (tested on Mac OSX) and should let you download videos from (almost) anywhere on the internet (see [supported sites](https://github.com/ytdl-org/youtube-dl/blob/master/docs/supportedsites.md) for an exhaustive list).
 
-_Banner built with [banner-maker](https://github.com/banner-maker/banner-maker)!_
+![example screenshot](./doc/screenshots/exampleUsage.png)
 
-## Demo
-![Demo](https://github.com/reZach/secure-electron-template/blob/master/docs/imgs/intro.gif "Demo")
+# Installation and usage
 
-## Features
-Taken from the [best-practices](https://electronjs.org/docs/tutorial/security) official page, here is what this repository offers!
+1. Download the latest release from the [releases page](https://github.com/muhummadPatel/vLoader/releases)
+2. Extract the downloaded .zip file and copy the included vLoader.app file to your Applications folder to install the app on your Mac
+3. The first time you open the app, it will need to download the required [youtube-dl](http://ytdl-org.github.io/youtube-dl/) binary for you. You should be presented with a dialog box like this: ![installation dialog screenshot](./doc/screenshots/dialogBox.png) Dismiss this box by clicking ok
+4. The app should complete it's setup in a minute or two and you should then be presented with the screen below. If not, quit the app (Cmd-Q) and reopen it.
+5. Once the app is open, you will be presented with the screen shown below. To download a video, paste the video URL/link (e.g. 'https://www.youtube.com/watch?v=4LWmRuB-uNU') in the 'Video link' box and either hit Enter or click the green download button. Your video should begin to download shortly ![main screen screenshot](./doc/screenshots/mainScreen.png)
+6. You can repeat step 5 to download as many videos as you like in parallel!
 
-1. [Only load secure content](https://electronjs.org/docs/tutorial/security#1-only-load-secure-content) - (Need help!)
-2. [Do not enable node.js integration for remote content](https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content) - ✅
-3. [Enable context isolation for remote content](https://electronjs.org/docs/tutorial/security#3-enable-context-isolation-for-remote-content) - ✅
-4. [Handle session permission requests from remote content](https://electronjs.org/docs/tutorial/security#4-handle-session-permission-requests-from-remote-content) - ✅
-5. [Do not disable websecurity](https://electronjs.org/docs/tutorial/security#5-do-not-disable-websecurity) - ✅
-6. [Define a content security policy](https://electronjs.org/docs/tutorial/security#6-define-a-content-security-policy) - ✅
-7. [Do not set allowRunningInsecureContent to true](https://electronjs.org/docs/tutorial/security#7-do-not-set-allowrunninginsecurecontent-to-true) - ✅
-8. [Do not enable experimental features](https://electronjs.org/docs/tutorial/security#8-do-not-enable-experimental-features) - ✅
-9. [Do not use enableBlinkFeatures](https://electronjs.org/docs/tutorial/security#9-do-not-use-enableblinkfeatures) - ✅
-10. [Do not use allowpopups](https://electronjs.org/docs/tutorial/security#10-do-not-use-allowpopups) - ✅
-11. [&lt;webview&gt; verify options and params](https://electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation) - ✅
-12. [Disable or limit navigation](https://electronjs.org/docs/tutorial/security#12-disable-or-limit-navigation) - ✅
-13. [Disable or limit creation of new windows](https://electronjs.org/docs/tutorial/security#13-disable-or-limit-creation-of-new-windows) - ✅
-14. [Do not use openExternal with untrusted content](https://electronjs.org/docs/tutorial/security#14-do-not-use-openexternal-with-untrusted-content) - ✅
-15. [Disable remote module](https://electronjs.org/docs/tutorial/security#15-disable-the-remote-module) - ✅
-16. [Filter the remote module](https://electronjs.org/docs/tutorial/security#16-filter-the-remote-module) - ✅
-17. [Use a current version of electron](https://electronjs.org/docs/tutorial/security#17-use-a-current-version-of-electron) - ✅
+# Todo
 
-## Included frameworks
-Built-in to this template are a number of popular frameworks already wired up to get you on the road running.
+I really only built this as a way to experiment with Javascript, React, and Electron so it's really not a very polished product. The following are a list of improvements for the future (pull-requests welcome):
 
-- [Electron](https://electronjs.org/)
-- [React](https://reactjs.org/)
-- [Redux](https://redux.js.org/) (with [Redux toolkit](https://redux-toolkit.js.org/))
-- [Babel](https://babeljs.io/)
-- [Webpack](https://webpack.js.org/) (with [webpack-dev-server](https://github.com/webpack/webpack-dev-server))
-- [i18next](https://www.i18next.com/) (with [this plugin](https://github.com/reZach/i18next-electron-fs-backend) for localization).
-- [Store](https://github.com/reZach/secure-electron-store) (for saving config/data)
-- [Context menu](https://github.com/reZach/secure-electron-context-menu) (supports custom context menus)
-- [Electron builder](https://www.electron.build/) (for packaging up your app)
-- [Easy redux undo](https://github.com/reZach/easy-redux-undo) (for undo/redoing your redux actions)
+- [ ] Proper Error Handling (don't just pop up dialogs when things fail)
+- [ ] Allow user to select from the available formats before downloading the video
+- [ ] Handle downloading playlists
+- [ ] Add support for pausing/resuming downloads
+- [ ] Persist the list of downloaded videos
 
+# Contact
 
-## Roadmap
-There are a number of additions that I'd like to implement in this repository, namely [auto-updating](https://www.electron.build/auto-update) and more release-focused enhancements and test suites, but those are lower priority (but I welcome PRs!).
-
-## Architecture
-For a more detailed view of the architecture of the template, please check out [here](https://github.com/reZach/secure-electron-template/blob/master/docs/architecture.md). I would _highly_ recommend reading this document to get yourself familiarized with this template.
-
-## How to get started
-Click the ![Use this template](https://github.com/reZach/secure-electron-template/blob/master/docs/imgs/usethistemplate.png "Use this template") button to get started.
-
-Alternatively, if you want to fork and contribute to the template, you can follow these commands:
-```
-git clone https://github.com/reZach/secure-electron-template.git
-cd secure-electron-template
-npm i
-npm run dev
-```
-
-## FAQ
-Please see [our faq](https://github.com/reZach/secure-electron-template/blob/master/docs/faq.md) for any common questions you might have.
-
-## Show us your apps!
-If you've built any applications with our template, we'd [love to see them!](https://github.com/reZach/secure-electron-template/blob/master/docs/yourapps.md).
+If you have any questions or need some help, please feel free to reach out by opening an [issue](https://github.com/muhummadPatel/vLoader/issues/new)
