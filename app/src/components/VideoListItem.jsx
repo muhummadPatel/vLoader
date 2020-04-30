@@ -108,12 +108,10 @@ class VideoListItem extends React.Component {
         >
           <button
             type="button"
-            className="button is-medium is-outlined"
+            className="delete is-large"
             onClick={this.onRemoveVideoClicked}
           >
-            <span className="icon is-small">
-              <i className="mdi mdi-24px mdi-close" />
-            </span>
+            &nbsp;
           </button>
         </div>
       </div>
