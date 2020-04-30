@@ -6,7 +6,7 @@ const youtubedl = require("youtube-dl");
 const image2base64 = require("image-to-base64");
 const Protocol = require("./protocol");
 const MenuBuilder = require("./menu");
-const videoUtils = require("./lib/videoUtils");
+const videoUtils = require("./videoUtils");
 
 const isDev = process.env.NODE_ENV === "development";
 const port = 40992; // Hardcoded; needs to match webpack.development.js and package.json
@@ -47,7 +47,7 @@ async function createWindow() {
     height: 600,
     title: `vLoader (v.${app.getVersion()})`,
     webPreferences: {
-      devTools: isDev,
+      devTools: true,
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
       nodeIntegrationInSubFrames: false,

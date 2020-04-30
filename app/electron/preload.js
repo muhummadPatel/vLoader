@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 const fs = require("fs");
 const Store = require("secure-electron-store").default;
-const videoUtils = require("./lib/videoUtils");
+const videoUtils = require("./videoUtils");
 
 // Create the electron store to be made available in the renderer process
 const store = new Store();
