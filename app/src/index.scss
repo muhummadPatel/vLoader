@@ -44,3 +44,39 @@ body {
     }
   }
 }
+
+/*
+ Scroll text on hover animation
+ To add a <p> that scrolls it's overflow text horizontally on hover, we do:
+ <div.column.has-min-width-0>
+   <div.hover-scroll-x>
+     <p>A p element with some veeeery looonggg text........</p>
+   </div>
+ </div>
+*/
+.column.has-min-width-0 {
+  min-width: 0;
+}
+.hover-scroll-x {
+  overflow: hidden;
+
+  & > p {
+    margin-left: 0%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    transition: 1s;
+    transition-property: margin-left;
+    transition-delay: 0s;
+  }
+
+  &:hover > p {
+    margin-left: -100%;
+
+    transition: 3.3s;
+    transition-property: margin-left;
+    transition-delay: 1s;
+    transition-timing-function: linear;
+  }
+}

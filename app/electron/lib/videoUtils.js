@@ -59,15 +59,29 @@ class VideoUtils {
     });
   }
 
-  download(videoUrl, format, onProgress = () => {}, onDone = () => {}) {
+  download(
+    videoUrl,
+    format,
+    onStart = () => {},
+    onProgress = () => {},
+    onDone = () => {}
+  ) {
     const args = ["--format", format];
     const video = this.youtubedl(videoUrl, args);
 
     let size = 0;
     video.on("info", (info) => {
-      size = info.size;
-      const outputFile = path.join(this.downloadDir, info._filename); // eslint-disable-line no-underscore-dangle
+      const details = {
+        size: info.size,
+        title: info.fulltitle,
+        filename: info._filename, // eslint-disable-line no-underscore-dangle
+      };
+
+      size = details.size;
+      const outputFile = path.join(this.downloadDir, details.filename);
       video.pipe(this.fs.createWriteStream(outputFile));
+
+      onStart(details);
     });
 
     let pos = 0;
@@ -77,7 +91,7 @@ class VideoUtils {
       // `size` should not be 0 here.
       if (size) {
         const state = {
-          progress: pos / size,
+          progress: ((pos / size) * 100).toFixed(2),
         };
 
         onProgress(state);
@@ -100,6 +114,7 @@ const Responses = {
   getFormats: "Response.getFormats",
   getThumbnail: "Response.getThumbnail",
   download: {
+    start: "Response.download.start",
     progress: "Response.download.progress",
     done: "Response.download.done",
   },
@@ -121,9 +136,12 @@ function preloadBindings(ipcRenderer) {
         next(thumbnails)
       );
     },
-    download: (videoUrl, format, onProgress, onDone) => {
+    download: (videoUrl, format, onStart, onProgress, onDone) => {
       ipcRenderer.send(Requests.download, videoUrl, format);
 
+      ipcRenderer.on(Responses.download.start, (event, details) =>
+        onStart(details)
+      );
       ipcRenderer.on(Responses.download.progress, (event, progress) =>
         onProgress(progress)
       );
@@ -158,15 +176,24 @@ function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
     });
   });
 
-  // download bindings
-  const onProgress = (event) => {
+  // download bindings generators for a given event
+  const onStartFor = (event) => {
+    return (details) => event.reply(Responses.download.start, details);
+  };
+  const onProgressFor = (event) => {
     return (progress) => event.reply(Responses.download.progress, progress);
   };
-  const onDone = (event) => {
+  const onDoneFor = (event) => {
     return () => event.reply(Responses.download.done);
   };
   ipcMain.on(Requests.download, (event, videoUrl, format) => {
-    videoUtils.download(videoUrl, format, onProgress(event), onDone(event));
+    videoUtils.download(
+      videoUrl,
+      format,
+      onStartFor(event),
+      onProgressFor(event),
+      onDoneFor(event)
+    );
   });
 }
 

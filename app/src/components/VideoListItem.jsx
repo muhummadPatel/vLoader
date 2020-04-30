@@ -7,15 +7,20 @@ class VideoListItem extends React.Component {
 
     this.state = {
       loaded: false,
+      done: false,
       thumbnail: null,
+      title: "loading details...",
+      size: null,
+      progress: null,
     };
+
+    this.startDownload = this.startDownload.bind(this);
   }
 
   componentDidMount() {
     const { video } = this.props;
 
     window.api.videoUtils.getThumbnail(video.url, (file) => {
-      console.log(file);
       this.setState((state) => {
         return {
           ...state,
@@ -24,13 +29,40 @@ class VideoListItem extends React.Component {
             thumbnail: file,
           },
         };
-      });
+      }, this.startDownload());
     });
   }
 
-  render() {
-    const { loaded, thumbnail } = this.state;
+  startDownload() {
     const { video } = this.props;
+    const format = "best"; // TODO: get this from the user
+
+    const onStart = ({ title, size }) => {
+      this.setState((state) => {
+        return { ...state, ...{ title, size } };
+      });
+    };
+    const onProgress = ({ progress }) => {
+      this.setState((state) => {
+        return { ...state, ...{ progress } };
+      });
+    };
+    const onDone = () => {
+      this.setState((state) => {
+        return { ...state, ...{ done: true } };
+      });
+    };
+    window.api.videoUtils.download(
+      video.url,
+      format,
+      onStart,
+      onProgress,
+      onDone
+    );
+  }
+
+  render() {
+    const { loaded, thumbnail, title, progress } = this.state;
 
     return (
       <div className="columns is-vcentered">
@@ -43,13 +75,14 @@ class VideoListItem extends React.Component {
           </figure>
         </div>
 
-        <div className="column">
-          <p className="is-size-6">{video.url}</p>
+        <div className="column has-min-width-0">
+          <div className="hover-scroll-x">
+            <p className="is-size-6">{title}</p>
+          </div>
           <progress
             className="progress is-large is-primary"
             max="100"
-            // TODO: fix this to actually display progress once we start the download
-            value={loaded ? 50 : null}
+            value={loaded ? progress : null}
           />
         </div>
 
