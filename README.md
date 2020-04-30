@@ -10,8 +10,8 @@ An extremely simple, no frills, video downloader. This app should run on any pla
 2. Extract the downloaded .zip file and copy the included vLoader.app file to your Applications folder to install the app on your Mac
 3. The first time you open the app, it will need to download the required [youtube-dl](http://ytdl-org.github.io/youtube-dl/) binary for you. You should be presented with a dialog box like this which you can safely dismiss by clicking 'Ok': <img src="./doc/screenshots/dialogBox.png" width="400" />
 4. The app should complete it's setup in a minute or two and you should then be presented with the screen below. If not, quit the app (Cmd-Q) and reopen it.
-5. Once the app is open, you will be presented with the screen shown below. To download a video, paste the video URL/link (e.g. 'https://www.youtube.com/watch?v=4LWmRuB-uNU') in the 'Video link' box and either hit Enter or click the green download button. Your video should begin to download shortly <img src="./doc/screenshots/mainScreen.png" width="400" />
-6. You can repeat step 5 to download as many videos as you like in parallel!
+5. Once the app is open, you will be presented with the screen shown below. To download a video, paste the video URL/link (e.g. 'https://www.youtube.com/watch?v=4LWmRuB-uNU') in the 'Video link' box and either hit Enter or click the green download button. Your video should begin to download shortly. Note that you can download as many videos as you like in parallel: 
+<img src="./doc/screenshots/mainScreen.png" width="400" />
 
 # Todo
 
