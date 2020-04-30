@@ -6,6 +6,7 @@ class VideoListItem extends React.Component {
     super(props);
 
     this.state = {
+      url: props.video.url,
       loaded: false,
       done: false,
       thumbnail: null,
@@ -15,6 +16,7 @@ class VideoListItem extends React.Component {
     };
 
     this.startDownload = this.startDownload.bind(this);
+    this.onRemoveVideoClicked = this.onRemoveVideoClicked.bind(this);
   }
 
   componentDidMount() {
@@ -31,6 +33,13 @@ class VideoListItem extends React.Component {
         };
       }, this.startDownload());
     });
+  }
+
+  onRemoveVideoClicked() {
+    const { onRemoveVideo } = this.props;
+    const { url } = this.state;
+
+    onRemoveVideo(url);
   }
 
   startDownload() {
@@ -62,7 +71,7 @@ class VideoListItem extends React.Component {
   }
 
   render() {
-    const { loaded, thumbnail, title, progress } = this.state;
+    const { loaded, done, thumbnail, title, progress } = this.state;
 
     return (
       <div className="columns is-vcentered">
@@ -86,8 +95,16 @@ class VideoListItem extends React.Component {
           />
         </div>
 
-        <div className="column is-narrow is-pulled-right">
-          <button type="button" className="button is-medium is-outlined">
+        <div
+          className={`column is-narrow is-pulled-right ${
+            done ? "" : "is-hidden"
+          }`}
+        >
+          <button
+            type="button"
+            className="button is-medium is-outlined"
+            onClick={this.onRemoveVideoClicked}
+          >
             <span className="icon is-small">
               <i className="mdi mdi-24px mdi-close" />
             </span>
@@ -102,6 +119,7 @@ VideoListItem.propTypes = {
   video: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,
+  onRemoveVideo: PropTypes.func.isRequired,
 };
 
 export default VideoListItem;

@@ -11,12 +11,23 @@ class App extends React.Component {
     };
 
     this.onAddVideo = this.onAddVideo.bind(this);
+    this.onRemoveVideo = this.onRemoveVideo.bind(this);
   }
 
   onAddVideo(video) {
     this.setState((state) => {
       const { videos } = state;
       return { ...state, ...{ videos: videos.concat(video) } };
+    });
+  }
+
+  onRemoveVideo(videoUrl) {
+    this.setState((state) => {
+      const { videos } = state;
+      return {
+        ...state,
+        ...{ videos: videos.filter((oldVideo) => oldVideo.url !== videoUrl) },
+      };
     });
   }
 
@@ -27,7 +38,7 @@ class App extends React.Component {
       <div className="container">
         <div className="box has-background-white-bis">
           <AddVideo onAddVideo={this.onAddVideo} />
-          <VideoList videos={videos} />
+          <VideoList videos={videos} onRemoveVideo={this.onRemoveVideo} />
         </div>
       </div>
     );

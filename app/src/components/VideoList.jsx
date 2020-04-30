@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import VideoListItem from "Components/VideoListItem";
 
 function VideoList(props) {
-  const { videos } = props;
+  const { videos, onRemoveVideo } = props;
 
   let contents;
   if (videos && videos.length > 0) {
     contents = videos.map((video) => (
       <div className="list-item" key={video.url}>
-        <VideoListItem video={video} />
+        <VideoListItem video={video} onRemoveVideo={onRemoveVideo} />
       </div>
     ));
   } else {
@@ -36,6 +36,7 @@ VideoList.propTypes = {
       url: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onRemoveVideo: PropTypes.func.isRequired,
 };
 
 export default VideoList;
