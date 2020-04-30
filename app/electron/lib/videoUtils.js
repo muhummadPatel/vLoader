@@ -81,7 +81,7 @@ class VideoUtils {
       const outputFile = path.join(this.downloadDir, details.filename);
       video.pipe(this.fs.createWriteStream(outputFile));
 
-      onStart(details);
+      onStart(videoUrl, details);
     });
 
     let pos = 0;
@@ -94,12 +94,12 @@ class VideoUtils {
           progress: ((pos / size) * 100).toFixed(2),
         };
 
-        onProgress(state);
+        onProgress(videoUrl, state);
       }
     });
 
     video.on("end", function end() {
-      onDone();
+      onDone(videoUrl);
     });
   }
 }
@@ -110,13 +110,16 @@ const Requests = {
   download: "Request.download",
 };
 
+// These need to be functions of the videoURL, because when sending back responses
+// to the renderer process, we need to know which videoUrl's callback needs to be
+// invoked.
 const Responses = {
-  getFormats: "Response.getFormats",
-  getThumbnail: "Response.getThumbnail",
+  getFormats: (videoUrl) => `Response.getFormats${videoUrl}`,
+  getThumbnail: (videoUrl) => `Response.getThumbnail${videoUrl}`,
   download: {
-    start: "Response.download.start",
-    progress: "Response.download.progress",
-    done: "Response.download.done",
+    start: (videoUrl) => `Response.download.start${videoUrl}`,
+    progress: (videoUrl) => `Response.download.progress${videoUrl}`,
+    done: (videoUrl) => `Response.download.done${videoUrl}`,
   },
 };
 
@@ -125,28 +128,28 @@ function preloadBindings(ipcRenderer) {
     getFormats: (videoUrl, next) => {
       ipcRenderer.send(Requests.getFormats, videoUrl);
 
-      ipcRenderer.on(Responses.getFormats, (event, formats) => {
+      ipcRenderer.on(Responses.getFormats(videoUrl), (event, formats) => {
         next(formats);
       });
     },
     getThumbnail: (videoUrl, next) => {
       ipcRenderer.send(Requests.getThumbnail, videoUrl);
 
-      ipcRenderer.on(Responses.getThumbnail, (event, thumbnails) =>
+      ipcRenderer.on(Responses.getThumbnail(videoUrl), (event, thumbnails) =>
         next(thumbnails)
       );
     },
     download: (videoUrl, format, onStart, onProgress, onDone) => {
       ipcRenderer.send(Requests.download, videoUrl, format);
 
-      ipcRenderer.on(Responses.download.start, (event, details) =>
+      ipcRenderer.on(Responses.download.start(videoUrl), (event, details) =>
         onStart(details)
       );
-      ipcRenderer.on(Responses.download.progress, (event, progress) =>
+      ipcRenderer.on(Responses.download.progress(videoUrl), (event, progress) =>
         onProgress(progress)
       );
       // eslint-disable-next-line no-unused-vars
-      ipcRenderer.on(Responses.download.done, (event) => {
+      ipcRenderer.on(Responses.download.done(videoUrl), (event) => {
         onDone();
       });
     },
@@ -161,7 +164,7 @@ function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
     videoUtils
       .getFormats(videoUrl)
       .then((formats) => {
-        event.reply(Responses.getFormats, formats);
+        event.reply(Responses.getFormats(videoUrl), formats);
       })
       .catch((err) => console.log(err));
   });
@@ -171,20 +174,22 @@ function mainBindings(ipcMain, app, fs, image2base64, youtubedl) {
     videoUtils.getThumbnail(videoUrl).then((thumbnail) => {
       image2base64(thumbnail).then((base64String) => {
         const imgStr = `data:image/png;base64, ${base64String}`;
-        event.reply(Responses.getThumbnail, imgStr);
+        event.reply(Responses.getThumbnail(videoUrl), imgStr);
       });
     });
   });
 
   // download bindings generators for a given event
   const onStartFor = (event) => {
-    return (details) => event.reply(Responses.download.start, details);
+    return (videoUrl, details) =>
+      event.reply(Responses.download.start(videoUrl), details);
   };
   const onProgressFor = (event) => {
-    return (progress) => event.reply(Responses.download.progress, progress);
+    return (videoUrl, progress) =>
+      event.reply(Responses.download.progress(videoUrl), progress);
   };
   const onDoneFor = (event) => {
-    return () => event.reply(Responses.download.done);
+    return (videoUrl) => event.reply(Responses.download.done(videoUrl));
   };
   ipcMain.on(Requests.download, (event, videoUrl, format) => {
     videoUtils.download(
