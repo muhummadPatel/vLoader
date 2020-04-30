@@ -89,10 +89,16 @@ class VideoListItem extends React.Component {
             <p className="is-size-6">{title}</p>
           </div>
           <progress
-            className="progress is-large is-primary"
+            className="progress is-large is-primary is-marginless"
             max="100"
-            value={loaded ? progress : null}
+            value={progress}
           />
+          <p
+            className={`has-text-centered is-bold is-size-4
+              ${progress ? "" : "is-hidden"}`}
+          >
+            {progress ? `${parseInt(progress, 10)}%` : "0%"}
+          </p>
         </div>
 
         <div
